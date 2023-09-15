@@ -1,32 +1,30 @@
-#Compartilhe com a gente um código criado por você em que usa estatísticas com outra base de dados. Dica: use a base USArrests.
+# Carregar a base de dados USArrests
+data("USArrests")
 
-### Estatística Descritiva com R
-## Tabela de frequência absoluta da variável Species da base iris
-table(iris$Species)
+# Visualizar as primeiras linhas da base de dados
+head(USArrests)
 
-## Tabela de frequência relativa da variável Species da base iris
-prop.table(table(iris$Species))
+# Tabela de frequência absoluta da variável "UrbanPop" (Taxa de Urbanização)
+table(USArrests$UrbanPop)
 
-## Média da variável Sepal.Length da base iris
-mean(iris$Sepal.Length)
+# Tabela de frequência relativa da variável "UrbanPop" (Taxa de Urbanização)
+prop.table(table(USArrests$UrbanPop))
 
-## Mediana da variável Sepal.Length da base iris
-median(iris$Sepal.Length)
+# Média da variável "Murder" (Taxa de Assassinato)
+mean(USArrests$Murder)
 
-## Separatrizes da variável Sepal.Length da base iris
-quantile(iris$Sepal.Length, probs=0.75)
-quantile(iris$Sepal.Length, probs=0.10)
-quantile(iris$Sepal.Length, probs=0.95)
-boxplot(iris$Sepal.Length) # boxplot - gráfico que resume as sepatrizes
+# Mediana da variável "Murder" (Taxa de Assassinato)
+median(USArrests$Murder)
 
-## Desvio-padrão da variável Sepal.Length da base iris
-sd(iris$Sepal.Length)
-plot(iris$Sepal.Length)
+# Separatrizes da variável "Murder" (Taxa de Assassinato)
+quantile(USArrests$Murder, probs = c(0.25, 0.75))
 
-## Sumário descritivo básico das variáveis
-summary(iris)
+# Desvio-padrão da variável "Murder" (Taxa de Assassinato)
+sd(USArrests$Murder)
 
-## Sumário descritivo completo das variáveis usando o pacote fBasics
-pacman::p_load(fBasics)
-basicStats(iris[ , c(1:4)])
-hist(iris$Sepal.Length) # histograma - gráfico que permite conhecer a curva dos dados
+# Sumário descritivo básico das variáveis
+summary(USArrests)
+
+# Sumário descritivo completo das variáveis usando o pacote fBasics
+library(fBasics)
+basicStats(USArrests)
