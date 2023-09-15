@@ -1,34 +1,42 @@
-#Compartilhe com a gente um código criado por você usando criando pelo menos 3 (três) gráficos vistos na vídeo aula.
-
-## Carregar pacotes que serão usados
-pacman::p_load(dplyr, ggplot2)
+# Carregar bibliotecas nativas
+library(dplyr)
+library(ggplot2)
 
 # Gráfico de Caixas Univariado
-
-iris %>% ggplot(aes(y = Sepal.Length)) + geom_boxplot()
+ggplot(data = iris, aes(y = Sepal.Length)) +
+  geom_boxplot()
 
 # Gráfico de Caixas Multivariado
-
-iris %>% ggplot(aes(y = Sepal.Length, x = Species)) + geom_boxplot()
+ggplot(data = iris, aes(y = Sepal.Length, x = Species)) +
+  geom_boxplot()
 
 # Histograma
-
-iris %>% ggplot(aes(x = Sepal.Length)) + geom_histogram()
+ggplot(data = iris, aes(x = Sepal.Length)) +
+  geom_histogram()
 
 # Densidade
+ggplot(data = iris, aes(x = Sepal.Length)) +
+  geom_density()
 
-iris %>% ggplot(aes(x = Sepal.Length)) + geom_density()
-
-## Leitura base orçamento defesa brasil
-
-defesaBrasilLong <- readRDS('bases_tratadas/orcamento_defesa_brasil.rds')
-
-# Séries Temporais
-defesaBrasilLong %>% group_by(Ano) %>% summarise(Valor = sum(Valor)) %>% ggplot(aes(x = Ano, y = Valor)) + geom_line()
-
-# Barras
-defesaBrasilLong %>% ggplot(aes(x = Ano, y = Valor)) + geom_bar(stat = "identity")
-
-# Dispersão
-defesaBrasilLong %>% ggplot(aes(x = Ano, y = Valor)) + geom_point()
-
+# Verifique se o arquivo 'orcamento_defesa_brasil.rds' existe no diretório correto
+if (file.exists('bases_tratadas/orcamento_defesa_brasil.rds')) {
+  # Leitura da base de dados
+  defesaBrasilLong <- readRDS('bases_tratadas/orcamento_defesa_brasil.rds')
+  
+  # Séries Temporais
+  defesaBrasilLong %>%
+    group_by(Ano) %>%
+    summarise(Valor = sum(Valor)) %>%
+    ggplot(aes(x = Ano, y = Valor)) +
+    geom_line()
+  
+  # Barras
+  ggplot(data = defesaBrasilLong, aes(x = Ano, y = Valor)) +
+    geom_bar(stat = "identity")
+  
+  # Dispersão
+  ggplot(data = defesaBrasilLong, aes(x = Ano, y = Valor)) +
+    geom_point()
+} else {
+  cat("O arquivo 'orcamento_defesa_brasil.rds' não foi encontrado no diretório.\n")
+}
