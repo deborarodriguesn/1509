@@ -1,19 +1,23 @@
-#Compartilhe com a gente uma aplicação de correlação usando alguma outra base, que pode ser nativa do R ou qualquer outra importada por você.
 ## CORRELAÇÃO COM R ##
-# PRIMEIRO, VAMOS CARREGAR OS PACOTES
-pacman::p_load(corrplot, dplyr, ggplot2)
+# Primeiro, vamos carregar as bibliotecas
+library(corrplot)
+library(dplyr)
+library(ggplot2)
 
-# BASE DE DADOS IRIS SEM AS ESPÉCIES #
-iris2 <- iris %>% select(-Species)
+# Base de dados mtcars
+data(mtcars)
 
-# TABELA DE CORRELAÇÃO COM TODAS AS VARIÁVEIS #
-cor(iris2)
+# Selecionar um subconjunto de variáveis para evitar o erro
+selected_vars <- mtcars[, c("mpg", "disp", "hp", "wt")]
 
-# GRÁFICOS DE DISPERSÃO PAREADOS DAS VARIÁVEIS #
-pairs(iris2)
+# Tabela de correlação com as variáveis selecionadas
+correlation_matrix <- cor(selected_vars)
+print(correlation_matrix)
 
-# CORRPLOT DAS VARIÁVEIS #
-irisCor <- cor(iris2)
-corrplot(irisCor, method = "number", order = 'alphabet')
-corrplot(irisCor, order = 'alphabet') 
+# Gráficos de dispersão pareados das variáveis selecionadas
+pairs(selected_vars)
+
+# Gráfico de correlação (corrplot) das variáveis
+corrplot(correlation_matrix, method = "number", order = 'alphabet')
+corrplot(correlation_matrix, order = 'alphabet')
 
