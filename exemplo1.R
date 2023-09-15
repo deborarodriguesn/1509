@@ -1,29 +1,76 @@
-# Carregar o conjunto de dados "iris" que é nativo do RStudio
-data(iris)
+### CARREGAR PACOTES
+pacman::p_load(ccaPP, lsa, minerva, Rfast)
 
-# Visualizar as primeiras linhas do conjunto de dados
-head(iris)
+##Instalar base de dados nativas
+install.packages("dados")
 
-# Gráfico de dispersão entre Sepal.Length e Sepal.Width
-plot(iris$Sepal.Length, iris$Sepal.Width, main = "Scatter Plot Sepal.Length vs Sepal.Width",
-     xlab = "Sepal.Length", ylab = "Sepal.Width", pch = 19)
+## CARREGAR BASE DE DADOS
+library(dados)
+dados::pixar_filmes
 
-# Calcular a correlação de Pearson entre Sepal.Length e Sepal.Width
-correlacao_sepal <- cor(iris$Sepal.Length, iris$Sepal.Width, method = "pearson")
-cat("Correlação de Pearson entre Sepal.Length e Sepal.Width:", correlacao_sepal, "\n")
+multi.cor <- function(filme, duracao) {
+  c(
+    cor = cor(filme, duracao), # Correlação
+    dcor = dcor(filme, duracao), # Distance correlation
+    cosine = cosine(filme, duracao), # Distância do Cosseno 
+    maxCor = maxCorProj(filme, duracao), # Maximal correlation
+    MIC = mine(filme, duracao)$MIC # Maximal Information Coefficient
+  )
+}
 
-# Gráfico de dispersão entre Sepal.Length e Petal.Length
-plot(iris$Sepal.Length, iris$Petal.Length, main = "Scatter Plot Sepal.Length vs Petal.Length",
-     xlab = "Sepal.Length", ylab = "Petal.Length", pch = 19)
+### EXEMPLO 1 LINEAR
+x <- runif(1000, 0, 10)
+y <- 5 - 1.7*x
 
-# Calcular a correlação de Pearson entre Sepal.Length e Petal.Length
-correlacao_petal <- cor(iris$Sepal.Length, iris$Petal.Length, method = "pearson")
-cat("Correlação de Pearson entre Sepal.Length e Petal.Length:", correlacao_petal, "\n")
+plot(x, y) # Plotar o gráfico
 
-# Gráfico de dispersão entre Sepal.Length e Petal.Width
-plot(iris$Sepal.Length, iris$Petal.Width, main = "Scatter Plot Sepal.Length vs Petal.Width",
-     xlab = "Sepal.Length", ylab = "Petal.Width", pch = 19)
+corList <- multi.cor(x, y)
+names(corList)
+corList <- corList[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList
 
-# Calcular a correlação de Pearson entre Sepal.Length e Petal.Width
-correlacao_petal_width <- cor(iris$Sepal.Length, iris$Petal.Width, method = "pearson")
-cat("Correlação de Pearson entre Sepal.Length e Petal.Width:", correlacao_petal_width, "\n")
+### EXEMPLO 1.1 LINEAR
+y1 <- y - runif(1000, 0, 1)
+
+plot(x, y1)
+
+corList1 <- multi.cor(x, y1)
+corList1 <- corList1[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList1
+
+### EXEMPLO 1.2 LINEAR
+y2 <- y - runif(1000, 0, 2)
+
+plot(x, y2)
+
+corList2 <- multi.cor(x, y2)
+corList2 <- corList2[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList2
+
+### EXEMPLO 2 QUADRÁTICA
+k <- runif(1000, -10, 10)
+l <- 5 - 1.7*k + k^2
+
+plot(k, l)
+
+corList <- multi.cor(k, l)
+corList <- corList[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList
+
+### EXEMPLO 2.1 QUADRÁTICA
+l1 <- l - runif(1000, -1, 1)
+
+plot(k, l1)
+
+corList3 <- multi.cor(k, l1)
+corList3 <- corList3[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList3
+
+### EXEMPLO 2.2 QUADRÁTICA
+l2 <- l - runif(1000, -2, 2)
+
+plot(k, l2)
+
+corList4 <- multi.cor(k, l2)
+corList4 <- corList4[c("cor", "MIC", "cosine", "maxCor", "dcor")]
+corList4
