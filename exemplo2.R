@@ -1,26 +1,27 @@
-#Compartilhe com a gente uma aplicação de associação usando alguma outra combinação da base câncer de mama que não seja a demonstrada
+# Carregar os pacotes necessários
+library(data.table)
+library(ggplot2)
 
-## QUI-QUADRADO COM R ##
-# PRIMEIRO, VAMOS CARREGAR OS PACOTES
-pacman::p_load(data.table, ggplot2)
+# Carregar a base de dados de câncer de mama
+breast_cancer <- fread('https://raw.githubusercontent.com/hugoavmedeiros/cp_com_r/master/bases_tratadas/breast_cancer.csv', stringsAsFactors = TRUE)
 
-# AGORA, A BASE DE DADOS CAR EVALUATION #
-breast_cancer <- fread('https://raw.githubusercontent.com/hugoavmedeiros/cp_com_r/master/bases_tratadas/breast_cancer.csv', stringsAsFactors = T)
-breast_cancer <- fread('bases_tratadas/breast_cancer.csv', stringsAsFactors = T)
+# Tabela de contingência entre as variáveis "grauparto" e "nodoslinfaticos"
+contingency_table <- table(breast_cancer$grauparto, breast_cancer$nodoslinfaticos)
+contingency_table
 
-# TABELA DE CONTINGÊNCIA #
-breast_cancer_table <- table(breast_cancer$breast, breast_cancer$tumor_tamanho)
-breast_cancer_table
+# Gráfico de barras empilhadas para visualizar a associação
+ggplot(data = breast_cancer, aes(x = grauparto, fill = as.factor(nodoslinfaticos))) +
+  geom_bar(position = "fill") +
+  labs(title = "Associação entre Grau de Parto e Número de Linfonodos Positivos",
+       fill = "Número de Linfonodos Positivos") +
+  theme_minimal()
 
-# GRÁFICOS DE DISPERSÃO PAREADOS DAS VARIÁVEIS #
-ggplot(breast_cancer) + aes(x = tumor_tamanho, fill = breast) + geom_bar(position = "fill")
+# Teste Qui-Quadrado
+chi_square_test <- chisq.test(contingency_table)
+chi_square_test
 
-# TESTE QUI QUADRADO #
-breast_cancer_test <- chisq.test(breast_cancer_table)
-breast_cancer_test
-breast_cancer_test$observed
-breast_cancer_test$expected
-
-# CORRPLOT DAS VARIÁVEIS #
-corrplot(breast_cancer_test$residuals, is.cor = FALSE)
-
+# Visualizar as frequências observadas e esperadas
+observed <- chi_square_test$observed
+expected <- chi_square_test$expected
+observed
+expected
