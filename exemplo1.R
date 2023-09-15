@@ -1,6 +1,6 @@
 # Carregar o conjunto de dados "iris" que é nativo do RStudio
 data(iris)
-teste
+
 # Visualizar as primeiras linhas do conjunto de dados
 head(iris)
 
