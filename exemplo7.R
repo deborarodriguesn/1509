@@ -1,38 +1,35 @@
-#Compartilhe com a gente um código criado por você com um processo de one hot encoding ou de discretização, e também a transformação dos fatores de uma base de dados em 3 tipos: mais frequente, segundo mais frequente e outros.
+# Instalar e carregar as bibliotecas necessárias
+install.packages("pacman")
+library(pacman)
+p_load(janitor, ade4, arules, forcats)
 
-pacman::p_load(
-  #ETL
-  janitor,
-  # DISCRETIZAÇÃO
-  ade4,
-  arules,
-  # FATORES
-  forcats)
-
+# Carregando o conjunto de dados do Facebook
 facebook <- read.table(
   "https://raw.githubusercontent.com/hugoavmedeiros/ciencia_politica_com_r/master/bases_originais/dataset_Facebook.csv", 
-  sep=";", 
-  header = T)
+  sep = ";", 
+  header = TRUE
+)
 
+# Verificando a estrutura do conjunto de dados
 str(facebook)
 
-# conversão em fatores
+# Convertendo as colunas de 2 a 7 em fatores
+for (i in 2:7) {
+  facebook[, i] <- as.factor(facebook[, i])
+}
 
-for(i in 2:7) {
-  facebook[,i] <- as.factor(facebook[,i]) } 
-
+# Verificando a estrutura novamente
 facebook %>% str()
 
-# filtro por tipo de dado
-
+# Filtrando as colunas que são fatores
 factorsFacebook <- unlist(lapply(facebook, is.factor))  
-facebookFactor <- facebook[ , factorsFacebook]
+facebookFactor <- facebook[, factorsFacebook]
 str(facebookFactor)
 
 # One Hot Encoding
 facebookDummy <- facebookFactor %>% acm.disjonctif()
 
-# Discretização
+# Discretização da variável Page.total.likes
 inteirosFacebook <- unlist(lapply(facebook, is.integer))  
 facebookInteiros <- facebook[, inteirosFacebook]
 facebookInteiros %>% str()
@@ -41,12 +38,18 @@ facebookInteiros$Page.total.likes.Disc <- discretize(facebookInteiros$Page.total
 
 facebookInteiros <- facebookInteiros %>% clean_names() # simplifica nomes usando janitor
 
+# Verificando as colunas do conjunto de dados após a discretização
 facebookInteiros %>% names()
 
-# forcats - usando tidyverse para fatores
-fct_count(facebookFactor$Type) # conta os fatores
+# Transformação de fatores usando forcats
+# Contagem dos fatores
+fct_count(facebookFactor$Type)
 
-fct_anon(facebookFactor$Type) # anonimiza os fatores
+# Anonimização dos fatores
+fct_anon(facebookFactor$Type)
 
-fct_lump(facebookFactor$Type, n = 1) # reclassifica os fatores em mais comum e outros
+# Reclassificação dos fatores em mais comum, segundo mais comum e outros
+facebookFactor$Type <- fct_lump(facebookFactor$Type, n = 2)
 
+# Verificando a transformação dos fatores
+fct_count(facebookFactor$Type)
